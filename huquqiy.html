@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tekshirib ol — oferta va maxfiylik</title>
+<script src="https://telegram.org/js/telegram-web-app.js?57"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Onest:wght@400;500;600;700&display=swap">
+<script>
+/* ===== REKVIZITLAR: shu yerni to'ldiring, qolgan matn o'zi o'zgaradi ===== */
+var REK = {
+  ijrochi: "",        // masalan: «Tekshirib ol» YaTT Falonchiyev F.F.
+  stir: "",           // STIR yoki JShShIR
+  manzil: "",         // Toshkent shahri, ... ko'chasi, ...
+  telefon: "",        // +998 __ ___ __ __
+  admin: "",          // @username
+  karta_egasi: "",    // kartadagi ism-familiya
+  sana: ""            // oferta e'lon qilingan sana, masalan 01.11.2026
+};
+</script>
+<style>
+:root{
+  --app:#F1F7F4; --card:#FFFFFF; --ink:#0F2A22; --muted:#4F6B61; --line:#D2E2DA;
+  --brand:#0A7559; --accent:#0A7559; --gold:#EAB140; --gold-soft:#FAF0DA; --gold-text:#8A5F0F;
+  --f-display:"Montserrat","Segoe UI",system-ui,sans-serif;
+  --f-body:"Onest","Segoe UI",system-ui,-apple-system,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){ --app:#071E18; --card:#0D2B22; --ink:#E6F1EC; --muted:#9BB6AC; --line:#1C4236; --accent:#63CFA6; --gold-soft:#2A2614; --gold-text:#EAB140; color-scheme:dark; }
+}
+:root[data-theme="dark"]{ --app:#071E18; --card:#0D2B22; --ink:#E6F1EC; --muted:#9BB6AC; --line:#1C4236; --accent:#63CFA6; --gold-soft:#2A2614; --gold-text:#EAB140; color-scheme:dark; }
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+body{margin:0;background:var(--app);color:var(--ink);font:15px/1.6 var(--f-body);-webkit-text-size-adjust:100%}
+a{color:var(--accent)}
+.top{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:10px;height:52px;padding:0 max(16px,env(safe-area-inset-left,0px));background:var(--app);border-bottom:1px solid var(--line)}
+.top a{font-weight:600;text-decoration:none}
+.tabs{margin-left:auto;display:flex;gap:6px}
+.tabs a{font-size:13px;padding:6px 10px;border:1px solid var(--line);border-radius:999px;color:var(--ink);background:var(--card)}
+main{max-width:680px;margin:0 auto;padding:20px max(16px,env(safe-area-inset-right,0px)) 48px max(16px,env(safe-area-inset-left,0px))}
+section{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px 18px;margin-bottom:22px}
+h1{font:800 21px/1.25 var(--f-display);margin:0 0 4px;text-wrap:balance}
+h2{font:700 16px/1.3 var(--f-display);margin:22px 0 6px}
+p{margin:6px 0}
+.meta{color:var(--muted);font-size:13.5px;margin-bottom:10px}
+ol,ul{padding-left:22px;margin:6px 0}
+li{margin:3px 0}
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:8px 0}
+th,td{text-align:left;vertical-align:top;padding:8px;border-bottom:1px solid var(--line)}
+th{font-weight:600;color:var(--muted)}
+.tw{overflow-x:auto}
+.fill{background:var(--gold-soft);color:var(--gold-text);border-radius:5px;padding:0 4px;font-weight:600}
+.rek{list-style:none;padding:0}
+</style>
+</head>
+<body>
+<header class="top">
+  <a href="index.html" id="back">‹ Orqaga</a>
+  <nav class="tabs"><a href="#oferta">Oferta</a><a href="#maxfiylik">Maxfiylik</a></nav>
+</header>
+<main>
+
+<section id="oferta">
+  <h1>Ommaviy oferta</h1>
+  <p class="meta">«Tekshirib ol» Telegram mini appi orqali axborot xizmatlarini ko'rsatish to'g'risida · Toshkent shahri, <span data-k="sana"></span></p>
+
+  <h2>1. Umumiy qoidalar</h2>
+  <p>1.1. Ushbu hujjat <span data-k="ijrochi"></span> (keyingi o'rinlarda «Ijrochi») tomonidan cheklanmagan doiradagi shaxslarga qaratilgan ommaviy ofertadir. U O'zbekiston Respublikasi Fuqarolik kodeksi va «Elektron tijorat to'g'risida»gi Qonunga muvofiq tuzilgan.</p>
+  <p>1.2. Foydalanuvchi quyidagi harakatlardan birini bajarsa, ofertani to'liq va so'zsiz qabul qilgan (aksept qilgan) hisoblanadi:</p>
+  <ol><li>mini appda ro'yxatdan o'tish va rozilik belgisini qo'yish (bepul xizmatlar uchun);</li><li>to'liq ro'yxat uchun to'lovni amalga oshirish va to'lov chekini mini appga yuklash (pullik xizmat uchun).</li></ol>
+  <p>1.3. Aksept qilingan paytdan boshlab Ijrochi va Foydalanuvchi o'rtasida ushbu oferta shartlaridagi shartnoma yozma shaklda tuzilgan hisoblanadi.</p>
+
+  <h2>2. Atamalar</h2>
+  <ul>
+    <li><b>Mini app</b> — @tekshiribol_uz_bot Telegram boti orqali ochiladigan «Tekshirib ol» ilovasi.</li>
+    <li><b>Foydalanuvchi</b> — mini appda ro'yxatdan o'tgan jismoniy shaxs.</li>
+    <li><b>Bepul ro'yxat</b> — Toshkentdagi qurilayotgan turar joy majmualari ro'yxatining dastlabki 10 ta qatori.</li>
+    <li><b>To'liq ro'yxat</b> — 100 ta majmuadan iborat ro'yxat: quruvchi, majmua, tuman, qavat, xonalar, maydon, 1 m² narxi, bo'lib to'lash, boshlang'ich to'lov, subsidiya, ipoteka, topshirish muddati, holati va quruvchi telefoni.</li>
+    <li><b>Tekshiruv xizmati</b> — ko'chmas mulkni xarid qilishdan oldin hujjatlarni va obyektni huquqiy tekshirish, alohida kelishuv asosida ko'rsatiladi.</li>
+  </ul>
+
+  <h2>3. Shartnoma predmeti</h2>
+  <p>3.1. Ijrochi Foydalanuvchiga mini app orqali bepul ro'yxatni bepul, to'liq ro'yxatni esa haq evaziga ko'rish imkonini beradi.</p>
+  <p>3.2. Ro'yxat ochiq manbalar va quruvchilar e'lon qilgan ma'lumotlar asosida tuzilgan va ma'lumot berish xususiyatiga ega. Narxlar, muddatlar va shartlar quruvchi tomonidan o'zgartirilishi mumkin. Ro'yxat quruvchining ofertasi hisoblanmaydi.</p>
+  <p>3.3. Ro'yxat ko'chmas mulk xarid qilish bo'yicha tavsiya yoki huquqiy xulosa emas. Xarid qarorini Foydalanuvchi o'zi qabul qiladi.</p>
+
+  <h2>4. Narx va to'lov tartibi</h2>
+  <p>4.1. To'liq ro'yxat narxi — 29 990 (yigirma to'qqiz ming to'qqiz yuz to'qson) so'm. To'lov bir martalik, obuna emas.</p>
+  <p>4.2. Foydalanuvchi pulni Click ilovasi orqali mini appda ko'rsatilgan bank kartasiga (<span data-k="karta_egasi"></span>) o'tkazadi va to'lov chekini mini appga yuklaydi.</p>
+  <p>4.3. Ijrochi chekni 24 soat ichida tekshiradi. To'lov tasdiqlansa, to'liq ro'yxat Foydalanuvchining Telegram akkauntida ochiladi va bot bu haqda xabar yuboradi.</p>
+  <p>4.4. Chek soxta, summa kam yoki to'lov kartaga kelib tushmagan bo'lsa, Ijrochi to'lovni rad etadi va bot orqali sababini xabar qiladi.</p>
+  <p>4.5. To'liq ro'yxatga kirish mini app faoliyat yuritgan davr mobaynida saqlanadi. Ro'yxat yangilansa, yangilangan qatorlar ham ochiq bo'ladi.</p>
+
+  <h2>5. Pulni qaytarish</h2>
+  <p>5.1. To'liq ro'yxat hali ochilmagan bo'lsa, Foydalanuvchi to'lovni qaytarishni talab qilishi mumkin. Pul 5 ish kuni ichida to'lov qilingan kartaga qaytariladi.</p>
+  <p>5.2. To'lov tasdiqlangan, lekin texnik sabab bilan to'liq ro'yxat ochilmagan bo'lsa, Ijrochi uni 3 ish kuni ichida ochadi yoki pulni qaytaradi.</p>
+  <p>5.3. To'liq ro'yxat ochilgandan keyin xizmat ko'rsatilgan hisoblanadi. Ushbu band Foydalanuvchining iste'molchi sifatida qonun bilan berilgan huquqlarini cheklamaydi.</p>
+
+  <h2>6. Tekshiruv arizasi</h2>
+  <p>6.1. Mini app orqali yuborilgan tekshiruv arizasi shartnoma emas, balki bog'lanish uchun so'rovdir.</p>
+  <p>6.2. Tekshiruv xizmatining narxi, muddati va hajmi Foydalanuvchi bilan alohida kelishiladi va alohida shartnoma bilan rasmiylashtiriladi.</p>
+
+  <h2>7. Taraflarning majburiyatlari</h2>
+  <p>7.1. Ijrochi:</p>
+  <ul><li>to'lov tasdiqlangach to'liq ro'yxatni ochadi;</li><li>Foydalanuvchining shaxsga doir ma'lumotlarini maxfiylik siyosatiga muvofiq qayta ishlaydi;</li><li>murojaatlarga 3 ish kuni ichida javob beradi.</li></ul>
+  <p>7.2. Foydalanuvchi:</p>
+  <ul><li>o'zi haqidagi to'g'ri ma'lumotlarni kiritadi;</li><li>haqiqiy to'lov chekini yuklaydi;</li><li>to'liq ro'yxatni nusxalab, sotib yoki boshqa yo'l bilan uchinchi shaxslarga tarqatmaydi.</li></ul>
+
+  <h2>8. Javobgarlik</h2>
+  <p>8.1. Ijrochi quruvchilar tomonidan narx, muddat va shartlar o'zgartirilishi uchun javob bermaydi.</p>
+  <p>8.2. Qonunda boshqacha belgilanmagan bo'lsa, Ijrochining javobgarligi Foydalanuvchi to'lagan summa bilan cheklanadi.</p>
+  <p>8.3. Telegram, Click, bank yoki internet provayderidagi uzilishlar Ijrochiga bog'liq bo'lmagan holat hisoblanadi.</p>
+
+  <h2>9. Nizolarni hal qilish</h2>
+  <p>9.1. Nizolar avvalo muzokara yo'li bilan hal qilinadi. Foydalanuvchi da'vosini <span data-k="admin"></span> yoki <span data-k="telefon"></span> orqali yuboradi.</p>
+  <p>9.2. Kelishuvga erishilmasa, nizo O'zbekiston Respublikasi qonunchiligiga muvofiq sudda ko'riladi.</p>
+
+  <h2>10. Ofertani o'zgartirish</h2>
+  <p>10.1. Ijrochi ofertani o'zgartirishi mumkin. Yangi tahrir mini appda e'lon qilingan kundan kuchga kiradi va undan keyin qilingan akseptlarga qo'llanadi.</p>
+
+  <h2>11. Ijrochi rekvizitlari</h2>
+  <ul class="rek">
+    <li>Ijrochi: <span data-k="ijrochi"></span></li>
+    <li>STIR / JShShIR: <span data-k="stir"></span></li>
+    <li>Manzil: <span data-k="manzil"></span></li>
+    <li>Aloqa: <span data-k="telefon"></span>, <span data-k="admin"></span></li>
+    <li>Bot: @tekshiribol_uz_bot</li>
+    <li>Instagram: tekshirib.ol</li>
+  </ul>
+</section>
+
+<section id="maxfiylik">
+  <h1>Maxfiylik siyosati</h1>
+  <p class="meta">«Tekshirib ol» mini appida shaxsga doir ma'lumotlarni qayta ishlash siyosati · Kuchga kirgan sana: <span data-k="sana"></span></p>
+
+  <h2>1. Kim qayta ishlaydi</h2>
+  <p>1.1. Ma'lumotlar mulkdori va operatori — <span data-k="ijrochi"></span>, <span data-k="manzil"></span>, STIR / JShShIR <span data-k="stir"></span>.</p>
+  <p>1.2. Siyosat «Shaxsga doir ma'lumotlar to'g'risida»gi Qonunga muvofiq tuzilgan va @tekshiribol_uz_bot mini appiga taalluqli.</p>
+
+  <h2>2. Qanday ma'lumotlar yig'iladi</h2>
+  <div class="tw"><table>
+    <thead><tr><th>Ma'lumot</th><th>Qachon olinadi</th><th>Nima uchun kerak</th></tr></thead>
+    <tbody>
+      <tr><td>Ism, familiya</td><td>Ro'yxatdan o'tishda</td><td>Murojaat qilish, to'lovni bog'lash</td></tr>
+      <tr><td>Telefon raqam</td><td>Ro'yxatdan o'tishda</td><td>Siz bilan bog'lanish</td></tr>
+      <tr><td>Telegram ID va username</td><td>Mini app ochilganda, Telegram uzatadi</td><td>Akkauntni aniqlash, bot xabarlari</td></tr>
+      <tr><td>To'lov cheki (rasm)</td><td>To'liq ro'yxat uchun to'lovda</td><td>To'lovni tasdiqlash</td></tr>
+      <tr><td>Obyekt turi, manzili, izoh</td><td>Tekshiruv arizasida</td><td>Ariza bo'yicha bog'lanish</td></tr>
+    </tbody>
+  </table></div>
+  <p>2.1. Pasport, biometrik va genetik ma'lumotlar yig'ilmaydi. Karta raqamini mini appga kiritmang: chekda karta raqamining faqat oxirgi raqamlari ko'rinsa yetarli.</p>
+
+  <h2>3. Qayta ishlash asosi va maqsadlari</h2>
+  <p>3.1. Asos — ro'yxatdan o'tishda rozilik belgisini qo'yish orqali bergan roziligingiz.</p>
+  <p>3.2. Maqsadlar:</p>
+  <ol><li>novostroykalar ro'yxatini ko'rsatish;</li><li>to'lovni tekshirish va to'liq ro'yxatni ochish;</li><li>tekshiruv arizasi bo'yicha siz bilan bog'lanish;</li><li>ro'yxatdan o'tganingizdan 24 soat o'tib, xizmatlarimiz haqida bitta xabar yuborish.</li></ol>
+  <p>3.3. Ma'lumotlar boshqa maqsadlarda ishlatilmaydi va sotilmaydi.</p>
+
+  <h2>4. Qayerda saqlanadi va kimga beriladi</h2>
+  <p>4.1. Ma'lumotlar Ijrochining yopiq Google Sheets jadvalida saqlanadi. Jadval Google LLC serverlarida joylashgan, ular O'zbekistondan tashqarida bo'lishi mumkin.</p>
+  <p>4.2. Mini app va bot Telegram orqali ishlaydi. Ro'yxatdan o'tganingizda ismingiz, familiyangiz, telefoningiz va Telegram username'ingiz Ijrochining yopiq Telegram guruhiga yuboriladi. Guruhda faqat Ijrochi va u vakolat bergan xodimlar bor. Telegram o'z maxfiylik siyosatiga muvofiq ishlaydi.</p>
+  <p>4.3. Ma'lumotlar uchinchi shaxslarga berilmaydi. Istisno — qonunda belgilangan hollarda vakolatli davlat organlarining so'rovi.</p>
+  <p>4.4. Jadvalga faqat Ijrochi va u vakolat bergan xodimlar kira oladi.</p>
+
+  <h2>5. Saqlash muddati</h2>
+  <p>5.1. Ma'lumotlar rozilik qaytarib olinguncha yoki oxirgi faollikdan keyin 3 yil davomida saqlanadi.</p>
+  <p>5.2. To'lov cheklari soliq va buxgalteriya qonunchiligida belgilangan muddat davomida saqlanadi.</p>
+  <p>5.3. Muddat tugagach yoki rozilik qaytarib olinganda ma'lumotlar o'chiriladi.</p>
+
+  <h2>6. Sizning huquqlaringiz</h2>
+  <ul><li>qaysi ma'lumotlaringiz qayta ishlanayotganini bilish;</li><li>noto'g'ri ma'lumotni tuzattirish;</li><li>ma'lumotlaringizni o'chirishni talab qilish;</li><li>rozilikni istalgan vaqtda qaytarib olish;</li><li>xizmat haqidagi xabarlardan voz kechish.</li></ul>
+  <p>Murojaat uchun <span data-k="admin"></span> yoki <span data-k="telefon"></span> ga yozing. Javob 10 ish kuni ichida beriladi.</p>
+
+  <h2>7. Himoya choralari</h2>
+  <p>7.1. Jadval yopiq: havola orqali ochib bo'lmaydi.</p>
+  <p>7.2. Mini app har bir so'rovda Telegram imzosini bot tokeni bilan tekshiradi. Shu tufayli boshqa odam sizning nomingizdan ma'lumot yubora olmaydi.</p>
+  <p>7.3. Bot tokeni jadvalda emas, alohida himoyalangan sozlamalarda saqlanadi.</p>
+
+  <h2>8. O'zgartirishlar</h2>
+  <p>8.1. Siyosat o'zgarsa, yangi tahrir mini appda e'lon qilinadi. Maqsad yoki ma'lumotlar tarkibi o'zgarsa, rozilik qaytadan so'raladi.</p>
+</section>
+
+</main>
+<script>
+(function(){
+  var LABEL = { ijrochi:"[Ijrochi]", stir:"[STIR / JShShIR]", manzil:"[Manzil]", telefon:"[Telefon]", admin:"[Telegram admin]", karta_egasi:"[Karta egasi]", sana:"[Sana]" };
+  document.querySelectorAll("[data-k]").forEach(function(el){
+    var k = el.getAttribute("data-k"), v = (REK[k] || "").trim();
+    el.textContent = v || LABEL[k] || k;
+    if (!v) el.className = "fill";
+  });
+  var TG = window.Telegram && window.Telegram.WebApp;
+  if (TG && TG.initData){
+    try { TG.ready(); document.documentElement.setAttribute("data-theme", TG.colorScheme === "light" ? "light" : "dark"); } catch (e){}
+    try { TG.BackButton.show(); TG.BackButton.onClick(function(){ location.href = "index.html"; }); } catch (e){}
+  }
+  document.getElementById("back").addEventListener("click", function(e){
+    if (document.referrer && document.referrer.indexOf(location.host) !== -1 && history.length > 1){ e.preventDefault(); history.back(); }
+  });
+})();
+</script>
+</body>
+</html>
