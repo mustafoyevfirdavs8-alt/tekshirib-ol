@@ -298,6 +298,15 @@ input[aria-invalid="true"]{border-color:var(--no)}
 .iz p{margin:0 0 12px;color:var(--ink);line-height:1.5;white-space:pre-line}
 .admin-tag{display:inline-block;margin-left:6px;font:700 11px var(--f-display);letter-spacing:.06em;text-transform:uppercase;color:var(--gold-ink);background:var(--gold);border-radius:999px;padding:3px 8px;vertical-align:middle}
 .more-sentinel{height:1px}
+.snd{position:fixed;right:14px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:30;width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:var(--card);box-shadow:var(--shadow);display:grid;place-items:center;color:var(--accent);cursor:pointer;padding:0}
+.snd svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.snd .spk{fill:currentColor;stroke:none}
+.snd .x{display:none}
+.snd.off{color:var(--muted)}
+.snd.off .waves{display:none}
+.snd.off .x{display:inline}
+.snd:not(.off) .waves{animation:snd-pulse 10s ease-in-out infinite;transform-origin:12px 12px}
+@keyframes snd-pulse{0%,100%{opacity:.45}50%{opacity:1}}
 #lots,#lock{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 #lots img{-webkit-user-drag:none;pointer-events:none}
 #lots .sx a{pointer-events:auto}
@@ -660,6 +669,7 @@ body.veil::after{content:"Tekshirib ol";position:fixed;inset:0;z-index:60;displa
 
 <button class="chip" id="chip" type="button" data-scroll="lists" hidden><span class="n-total">100</span> ta novostroyka roʻyxati ↓</button>
 <div class="toast" id="toast" role="status" hidden></div>
+<button class="snd" id="snd" type="button" aria-label="Musiqani oʻchirish" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="spk" d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path class="waves" d="M15.5 9a4.5 4.5 0 0 1 0 6M18 6.5a8 8 0 0 1 0 11"/><path class="x" d="M16 9.5l5 5M21 9.5l-5 5"/></svg></button>
 
 <script>
 (function(){
@@ -680,6 +690,86 @@ body.veil::after{content:"Tekshirib ol";position:fixed;inset:0;z-index:60;displa
   function money(n){ return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, " "); }
   function cur(){ return stack[stack.length-1]; }
   var toastT;
+/* Tekshirib ol — calm generative ambience (Web Audio, no files). ~6 breaths a minute. */
+  function CalmMusic(ctx, out){
+    var master = ctx.createGain(); master.gain.value = 0;
+    var comp = ctx.createDynamicsCompressor(); comp.threshold.value = -20; comp.ratio.value = 3;
+    master.connect(comp); comp.connect(out);
+    // soft room reverb from a generated impulse
+    var rev = ctx.createConvolver(), len = Math.floor(ctx.sampleRate * 4), ir = ctx.createBuffer(2, len, ctx.sampleRate);
+    for (var ch = 0; ch < 2; ch++){ var d = ir.getChannelData(ch); for (var i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.6); }
+    rev.buffer = ir;
+    var wet = ctx.createGain(); wet.gain.value = .55; rev.connect(wet); wet.connect(master);
+    var dry = ctx.createGain(); dry.gain.value = .6; dry.connect(master);
+    var bus = ctx.createGain(); bus.connect(dry); bus.connect(rev);
+    // warm low-pass that slowly "breathes" (10 s cycle)
+    var lp = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 1100; lp.Q.value = .4; lp.connect(bus);
+    var lfo = ctx.createOscillator(), lfoG = ctx.createGain(); lfo.frequency.value = .1; lfoG.gain.value = 380; lfo.connect(lfoG); lfoG.connect(lp.frequency); lfo.start();
+    function hz(m){ return 440 * Math.pow(2, (m - 69) / 12); }
+    // D major colour: Dmaj9, Bm9, Gmaj9, Asus2 — open, unresolved, unhurried
+    var chords = [[50,57,62,66,69,76],[47,54,62,66,69,73],[43,50,59,62,66,74],[45,52,59,64,69,71]];
+    var bells = [74,76,78,81,83,86,88];
+    var CH = 12; // seconds per chord
+    function pad(notes, t, dur){
+      notes.forEach(function(m, k){
+        [-1.6, 1.6].forEach(function(det){
+          var o = ctx.createOscillator(), g = ctx.createGain();
+          o.type = k === 0 ? "sine" : "triangle"; o.frequency.value = hz(m); o.detune.value = det * (0.6 + Math.random() * 0.8);
+          var peak = (k === 0 ? .06 : .028) / (1 + k * .15);
+          g.gain.setValueAtTime(0, t);
+          g.gain.linearRampToValueAtTime(peak, t + 4.5);
+          g.gain.setValueAtTime(peak, t + dur - 1);
+          g.gain.linearRampToValueAtTime(0, t + dur + 5);
+          o.connect(g); g.connect(lp); o.start(t); o.stop(t + dur + 5.2);
+        });
+      });
+    }
+    function bell(m, t, v){
+      var o = ctx.createOscillator(), o2 = ctx.createOscillator(), g = ctx.createGain();
+      o.type = "sine"; o.frequency.value = hz(m); o2.type = "sine"; o2.frequency.value = hz(m) * 2.01;
+      var g2 = ctx.createGain(); g2.gain.value = .25;
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(v, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + 4.5);
+      o.connect(g); o2.connect(g2); g2.connect(g); g.connect(bus); o.start(t); o2.start(t); o.stop(t + 4.6); o2.stop(t + 4.6);
+    }
+    var nextChord = 0, idx = 0, nextBell = 0, rnd = Math.random;
+    return {
+      start: function(t){ nextChord = t; nextBell = t + 3; master.gain.cancelScheduledValues(t); master.gain.setValueAtTime(master.gain.value, t); master.gain.linearRampToValueAtTime(2.4, t + 5); },
+      fade: function(to, sec){ var t = ctx.currentTime; master.gain.cancelScheduledValues(t); master.gain.setValueAtTime(master.gain.value, t); master.gain.linearRampToValueAtTime(to, t + (sec || 1.5)); },
+      schedule: function(until){
+        while (nextChord < until){ pad(chords[idx % chords.length], nextChord, CH); idx++; nextChord += CH; }
+        while (nextBell < until){ if (rnd() < .8) bell(bells[Math.floor(rnd() * bells.length)], nextBell, .05 + rnd() * .03); nextBell += 2.5 + rnd() * 3.5; }
+      }
+    };
+  }
+  /* background music: starts on the first tap (browsers forbid autoplay), button toggles, choice remembered */
+  var actx = null, music = null, mTimer = null, mOn = true, mTouched = false;
+  try { mOn = localStorage.getItem("tk_music") !== "off"; } catch(_){}
+  function sndUI(){ var b = $("snd"); if (!b) return; b.classList.toggle("off", !mOn); b.setAttribute("aria-pressed", String(mOn)); b.setAttribute("aria-label", mOn ? "Musiqani oʻchirish" : "Musiqani yoqish"); }
+  function musicStart(){
+    if (!mOn) return;
+    try {
+      if (!actx){
+        var AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+        actx = new AC(); music = CalmMusic(actx, actx.destination); music.start(actx.currentTime + .1);
+      } else music.fade(2.4, 2);
+      if (actx.state !== "running") actx.resume();
+      music.schedule(actx.currentTime + 6);
+      if (!mTimer) mTimer = setInterval(function(){ if (actx && actx.state === "running") music.schedule(actx.currentTime + 6); }, 1000);
+    } catch(_){}
+  }
+  function musicStop(){ if (!actx) return; music.fade(0, 1.2); setTimeout(function(){ if (actx && (!mOn || document.hidden)) actx.suspend(); }, 1400); }
+  function firstTouch(e){
+    if (mTouched) return; mTouched = true;
+    if (e.target && e.target.closest && e.target.closest("#snd")) return;
+    musicStart();
+  }
+  ["touchend","click","keydown"].forEach(function(ev){ document.addEventListener(ev, firstTouch, true); });
+  $("snd").addEventListener("click", function(){
+    mOn = !mOn; try { localStorage.setItem("tk_music", mOn ? "on" : "off"); } catch(_){}
+    sndUI(); if (mOn) musicStart(); else musicStop();
+  });
+  sndUI();
+  document.addEventListener("visibilitychange", function(){ if (!actx) return; if (document.hidden) actx.suspend(); else if (mOn) actx.resume(); });
   function veil(on){ document.body.classList.toggle("veil", !!on); }
   document.addEventListener("visibilitychange", function(){ veil(document.hidden); });
   window.addEventListener("pagehide", function(){ veil(true); });
