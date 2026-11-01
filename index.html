@@ -298,8 +298,6 @@ input[aria-invalid="true"]{border-color:var(--no)}
 .iz p{margin:0 0 12px;color:var(--ink);line-height:1.5;white-space:pre-line}
 .admin-tag{display:inline-block;margin-left:6px;font:700 11px var(--f-display);letter-spacing:.06em;text-transform:uppercase;color:var(--gold-ink);background:var(--gold);border-radius:999px;padding:3px 8px;vertical-align:middle}
 .more-sentinel{height:1px}
-.wm{position:fixed;inset:0;z-index:4;pointer-events:none;background-repeat:repeat;opacity:.09}
-[data-theme="dark"] .wm{opacity:.11}
 #lots,#lock{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 #lots img{-webkit-user-drag:none;pointer-events:none}
 #lots .sx a{pointer-events:auto}
@@ -738,7 +736,7 @@ body.veil::after{content:"Tekshirib ol";position:fixed;inset:0;z-index:60;displa
     topbar.hidden = stack.length <= 1;
     try { if (TG && TG.BackButton){ if (stack.length > 1) TG.BackButton.show(); else TG.BackButton.hide(); } } catch (e){}
     if (name === "home") renderHome();
-    if (name === "list") renderList(); else if ($("wm")) $("wm").hidden = true;
+    if (name === "list") renderList();
     if (name === "pay") openPay();
     if (name === "pending") renderPending();
     if (name === "request") fillRequest();
@@ -961,18 +959,7 @@ body.veil::after{content:"Tekshirib ol";position:fixed;inset:0;z-index:60;displa
       '</div>' +
     '</article>';
   }
-  /* personal watermark: name + phone repeated over the list, so a shared screenshot shows who leaked it */
-  function watermark(){
-    var w = $("wm");
-    if (!w){ w = document.createElement("div"); w.id = "wm"; w.className = "wm"; w.setAttribute("aria-hidden", "true"); document.body.appendChild(w); }
-    var who = S && S.user ? (S.user.ism + " " + (S.user.fam || "") + " · " + (S.user.tel || "")) : ((S && S.tgFirst) || "Tekshirib ol");
-    var t = esc(who.trim() + " · Tekshirib ol"), col = document.documentElement.getAttribute("data-theme") === "dark" ? "#ffffff" : "#0A3B2E";
-    var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="190"><text x="150" y="95" fill="' + col + '" font-family="Arial,sans-serif" font-size="15" font-weight="700" text-anchor="middle" transform="rotate(-28 150 95)">' + t + '</text></svg>';
-    w.style.backgroundImage = 'url("data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg) + '")';
-    w.hidden = false;
-  }
   function renderList(){
-    watermark();
     var full = mode === "full", base = ((S && S.list) || []).slice(0, full ? undefined : (S && S.free) || 10);
     $("l-title").textContent = full ? "Toʻliq roʻyxat" : "Bepul roʻyxat";
     $("l-sub").textContent = full ? S.total + " ta majmua" : S.free + " ta majmua · yana " + Math.max(S.total - S.free, 0) + " tasi toʻliq roʻyxatda";
