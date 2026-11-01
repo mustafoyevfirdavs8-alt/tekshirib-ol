@@ -270,10 +270,13 @@ input[aria-invalid="true"]{border-color:var(--no)}
 .lot-hero h3{margin:0;font:800 19px/1.2 var(--f-display);letter-spacing:-.01em;text-shadow:0 2px 12px rgba(0,0,0,.35);text-wrap:balance}
 .lot-hero .dev{margin:0;font-size:13px;font-weight:500;color:rgba(255,255,255,.85)}
 .lot-no{position:absolute;right:14px;bottom:14px;font:700 11.5px var(--f-mono);color:rgba(255,255,255,.7);letter-spacing:.06em}
-.facts{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px;margin:0}
-.facts div{min-width:0}
-.facts dt{font-size:11.5px;color:var(--muted);letter-spacing:.02em}
-.facts dd{margin:1px 0 0;font-size:14px;font-weight:500;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.facts{display:grid;grid-template-columns:1fr 1fr;grid-auto-flow:row dense;gap:8px;margin:0}
+.facts div{min-width:0;background:var(--sunk);border:1px solid var(--line);border-radius:12px;padding:9px 11px;display:flex;flex-direction:column;gap:3px}
+.facts div.wide{grid-column:1 / -1}
+.facts dt{font-size:11.5px;color:var(--muted);letter-spacing:.02em;font-weight:600}
+.facts dd{margin:0;font-size:14px;font-weight:600;line-height:1.35;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.tels{display:flex;flex-direction:column;gap:6px;width:100%}
+.tel-row{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--sunk);border:1px solid var(--line);border-radius:12px;padding:6px 6px 6px 12px}
 .nil{color:var(--muted);font-weight:400}
 .flags{display:flex;flex-wrap:wrap;gap:6px}
 .flag{font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px}
@@ -295,6 +298,13 @@ input[aria-invalid="true"]{border-color:var(--no)}
 .iz p{margin:0 0 12px;color:var(--ink);line-height:1.5;white-space:pre-line}
 .admin-tag{display:inline-block;margin-left:6px;font:700 11px var(--f-display);letter-spacing:.06em;text-transform:uppercase;color:var(--gold-ink);background:var(--gold);border-radius:999px;padding:3px 8px;vertical-align:middle}
 .more-sentinel{height:1px}
+.wm{position:fixed;inset:0;z-index:4;pointer-events:none;background-repeat:repeat;opacity:.09}
+[data-theme="dark"] .wm{opacity:.11}
+#lots,#lock{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+#lots img{-webkit-user-drag:none;pointer-events:none}
+#lots .sx a{pointer-events:auto}
+body.veil .shell{filter:blur(22px)}
+body.veil::after{content:"Tekshirib ol";position:fixed;inset:0;z-index:60;display:grid;place-items:center;background:var(--app);color:var(--accent);font:800 22px var(--f-display)}
 .lot-foot{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;border-top:1px dashed var(--line);padding-top:12px}
 .tel{font:500 13.5px var(--f-mono);user-select:all;font-variant-numeric:tabular-nums}
 .lot-foot .link{margin-left:auto}
@@ -672,6 +682,12 @@ input[aria-invalid="true"]{border-color:var(--no)}
   function money(n){ return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, " "); }
   function cur(){ return stack[stack.length-1]; }
   var toastT;
+  function veil(on){ document.body.classList.toggle("veil", !!on); }
+  document.addEventListener("visibilitychange", function(){ veil(document.hidden); });
+  window.addEventListener("pagehide", function(){ veil(true); });
+  window.addEventListener("pageshow", function(){ veil(false); });
+  try { if (window.Telegram && Telegram.WebApp && Telegram.WebApp.onEvent){ Telegram.WebApp.onEvent("deactivated", function(){ veil(true); }); Telegram.WebApp.onEvent("activated", function(){ veil(false); }); } } catch(_){}
+  ["contextmenu","copy","dragstart"].forEach(function(ev){ document.addEventListener(ev, function(e){ if (e.target.closest && e.target.closest("#lots,#lock")) e.preventDefault(); }); });
   window.addEventListener("error", function(e){ try { toast("Xatolik: " + (e.message || "nomaʼlum")); } catch(_){} });
   function toast(msg){ var t = $("toast"); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(function(){ t.hidden = true; }, 3200); }
   function errText(e){ return String((e && e.message) || e || "Xatolik").replace(/^(Error|Exception|ScriptError):\s*/i, ""); }
@@ -722,7 +738,7 @@ input[aria-invalid="true"]{border-color:var(--no)}
     topbar.hidden = stack.length <= 1;
     try { if (TG && TG.BackButton){ if (stack.length > 1) TG.BackButton.show(); else TG.BackButton.hide(); } } catch (e){}
     if (name === "home") renderHome();
-    if (name === "list") renderList();
+    if (name === "list") renderList(); else if ($("wm")) $("wm").hidden = true;
     if (name === "pay") openPay();
     if (name === "pending") renderPending();
     if (name === "request") fillRequest();
@@ -914,8 +930,9 @@ input[aria-invalid="true"]{border-color:var(--no)}
     return esc(m.toUpperCase());
   }
   function lotHTML(d, i){
-    var foot = d.tel
-      ? '<span class="tel">' + esc(d.tel) + '</span><button class="btn sm ghost" type="button" data-copy="' + esc(d.tel.replace(/[^\d+]/g,"")) + '">Nusxa</button>'
+    var tels = String(d.tel || "").split(/[,;]+/).map(function(t){ return t.trim(); }).filter(Boolean);
+    var foot = tels.length
+      ? '<div class="tels">' + tels.map(function(t){ return '<div class="tel-row"><span class="tel">' + esc(t) + '</span><button class="btn sm ghost" type="button" data-copy="' + esc(t.replace(/[^\d+]/g,"")) + '">Nusxa</button></div>'; }).join("") + '</div>'
       : '<span class="small muted">Telefon koʻrsatilmagan</span>';
     var hsh = hash((d.k || "") + "|" + (d.m || "")), pal = PAL[hsh % PAL.length];
     var mark = d.logo ? '<img src="' + esc(d.logo) + '" alt="' + esc(d.k) + ' logotipi" loading="lazy" onerror="this.parentNode.textContent=\'' + monogram(d.k || d.m) + '\'">' : monogram(d.k || d.m);
@@ -929,11 +946,11 @@ input[aria-invalid="true"]{border-color:var(--no)}
       '<dl class="facts">' +
         '<div><dt>Qavat</dt><dd>' + v(d.q) + '</dd></div>' +
         '<div><dt>Xonalar</dt><dd>' + v(d.x) + '</dd></div>' +
-        '<div><dt>Maydon</dt><dd>' + v(d.s) + '</dd></div>' +
-        '<div><dt>1 m² narxi</dt><dd>' + v(price(d.n)) + '</dd></div>' +
-        '<div><dt>Boʻlib toʻlash</dt><dd>' + v(d.b) + '</dd></div>' +
-        '<div><dt>Boshlangʻich toʻlov</dt><dd>' + v(d.bt) + '</dd></div>' +
-        '<div><dt>Topshirish</dt><dd>' + v(d.top) + '</dd></div>' +
+        '<div' + (String(d.s || "").length > 28 ? ' class="wide"' : '') + '><dt>Maydon</dt><dd>' + v(d.s) + '</dd></div>' +
+        '<div' + (String(d.n || "").length > 28 ? ' class="wide"' : '') + '><dt>1 m² narxi</dt><dd>' + v(price(d.n)) + '</dd></div>' +
+        '<div' + (String(d.b || "").length > 28 ? ' class="wide"' : '') + '><dt>Boʻlib toʻlash</dt><dd>' + v(d.b) + '</dd></div>' +
+        '<div' + (String(d.bt || "").length > 28 ? ' class="wide"' : '') + '><dt>Boshlangʻich toʻlov</dt><dd>' + v(d.bt) + '</dd></div>' +
+        '<div' + (String(d.top || "").length > 28 ? ' class="wide"' : '') + '><dt>Topshirish</dt><dd>' + v(d.top) + '</dd></div>' +
         '<div><dt>Holati</dt><dd>' + v(d.h) + '</dd></div>' +
       '</dl>' +
       (d.adr || d.map ? '<div class="where"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><p>' + (d.adr ? esc(d.adr) : '<span class="nil">Manzil koʻrsatilmagan</span>') + '</p>' + (/^https:\/\//.test(d.map || "") ? '<a href="' + esc(d.map) + '" data-ext>Xaritada</a>' : "") + '</div>' : "") +
@@ -944,7 +961,18 @@ input[aria-invalid="true"]{border-color:var(--no)}
       '</div>' +
     '</article>';
   }
+  /* personal watermark: name + phone repeated over the list, so a shared screenshot shows who leaked it */
+  function watermark(){
+    var w = $("wm");
+    if (!w){ w = document.createElement("div"); w.id = "wm"; w.className = "wm"; w.setAttribute("aria-hidden", "true"); document.body.appendChild(w); }
+    var who = S && S.user ? (S.user.ism + " " + (S.user.fam || "") + " · " + (S.user.tel || "")) : ((S && S.tgFirst) || "Tekshirib ol");
+    var t = esc(who.trim() + " · Tekshirib ol"), col = document.documentElement.getAttribute("data-theme") === "dark" ? "#ffffff" : "#0A3B2E";
+    var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="190"><text x="150" y="95" fill="' + col + '" font-family="Arial,sans-serif" font-size="15" font-weight="700" text-anchor="middle" transform="rotate(-28 150 95)">' + t + '</text></svg>';
+    w.style.backgroundImage = 'url("data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg) + '")';
+    w.hidden = false;
+  }
   function renderList(){
+    watermark();
     var full = mode === "full", base = ((S && S.list) || []).slice(0, full ? undefined : (S && S.free) || 10);
     $("l-title").textContent = full ? "Toʻliq roʻyxat" : "Bepul roʻyxat";
     $("l-sub").textContent = full ? S.total + " ta majmua" : S.free + " ta majmua · yana " + Math.max(S.total - S.free, 0) + " tasi toʻliq roʻyxatda";
@@ -964,7 +992,7 @@ input[aria-invalid="true"]{border-color:var(--no)}
     $("lots").innerHTML = rows.length ? "" : '<p class="empty">Bu filtr boʻyicha majmua topilmadi. <button class="link" type="button" data-clear>Filtrni tozalash</button></p>';
     if (rows.length) more();
     watchLots();
-    $("lock").hidden = full || S.status === "Toʻlagan" || S.total <= S.free;
+    $("lock").hidden = full || S.total <= S.free;
     if (!$("lock").hidden) renderLock();
   }
   var io = null;
@@ -1002,7 +1030,9 @@ input[aria-invalid="true"]{border-color:var(--no)}
   function renderLock(){
     var icon = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="10.5" width="16" height="11" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2"/></svg>';
     var extra = Math.max(S.total - S.free, 0), c = $("lock-card");
-    if (S.status === "Kutilmoqda"){
+    if (S.status === "Toʻlagan"){
+      c.innerHTML = icon + '<h3>Yana ' + extra + ' ta majmua</h3><p>Toʻliq roʻyxat siz uchun ochiq' + (S.admin ? ' (admin)' : '') + '. Mijozlar bu yerda ' + money(S.price) + ' soʻmlik toʻlov tugmasini koʻradi.</p><button class="btn gold block" type="button" data-buy>Toʻliq roʻyxatni ochish</button>';
+    } else if (S.status === "Kutilmoqda"){
       c.innerHTML = icon + '<h3>Chekingiz tekshirilmoqda</h3><p>Admin tasdiqlagach yana ' + extra + ' ta majmua ochiladi.</p><button class="btn ghost block" type="button" data-buy>Toʻlov holatini koʻrish</button>';
     } else {
       c.innerHTML = icon + '<h3>Yana ' + extra + ' ta majmua yopiq</h3><p>Toʻliq roʻyxat: ' + S.total + ' ta majmua, bir martalik toʻlov.</p><button class="btn gold block" type="button" data-buy>' + money(S.price) + ' soʻmga ochish</button>';
